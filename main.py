@@ -12,6 +12,11 @@ Bootstrap(app)
 
 class CafeForm(FlaskForm):
     cafe = StringField('Cafe name', validators=[DataRequired()])
+    location = StringField("Cafe Location on Google Maps (URL)", validators=[DataRequired()])
+    opening = StringField('Opening Time', validators=[DataRequired()])
+    closing = StringField('Closing Time', validators=[DataRequired()])
+    coffee = StringField("Coffee Rating", validators=[DataRequired()])
+    wifi = StringField("Wifi Rating", validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 # Exercise:
@@ -51,4 +56,4 @@ def cafes():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000, debug=True)
