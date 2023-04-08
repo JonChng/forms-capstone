@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, URL
 import csv
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ Bootstrap(app)
 
 class CafeForm(FlaskForm):
     cafe = StringField('Cafe name', validators=[DataRequired()])
-    location = StringField("Cafe Location on Google Maps (URL)", validators=[DataRequired()])
+    location = StringField("Cafe Location on Google Maps (URL)", validators=[DataRequired(), URL()])
     opening = StringField('Opening Time', validators=[DataRequired()])
     closing = StringField('Closing Time', validators=[DataRequired()])
     coffee = StringField("Coffee Rating", validators=[DataRequired()])
