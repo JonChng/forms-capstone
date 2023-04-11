@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, URL
 import csv
 
@@ -15,8 +15,10 @@ class CafeForm(FlaskForm):
     location = StringField("Cafe Location on Google Maps (URL)", validators=[DataRequired(), URL()])
     opening = StringField('Opening Time', validators=[DataRequired()])
     closing = StringField('Closing Time', validators=[DataRequired()])
-    coffee = StringField("Coffee Rating", validators=[DataRequired()])
-    wifi = StringField("Wifi Rating", validators=[DataRequired()])
+    coffee = SelectField("Coffee Rating", choices=["☕️", "☕☕", "☕☕☕", "☕☕☕☕", "☕☕☕☕☕"], validators=[DataRequired()])
+    wifi =  SelectField("Wifi Strength Rating", choices=["✘", "💪", "💪💪", "💪💪💪", "💪💪💪💪", "💪💪💪💪💪"], validators=[DataRequired()])
+    power_rating = SelectField("Power Socket Availability", choices=["✘", "🔌", "🔌🔌", "🔌🔌🔌", "🔌🔌🔌🔌", "🔌🔌🔌🔌🔌"],
+                               validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 # Exercise:
@@ -34,11 +36,23 @@ def home():
     return render_template("index.html")
 
 
-@app.route('/add')
+@app.route('/add', methods=['GET','POST'])
 def add_cafe():
     form = CafeForm()
     if form.validate_on_submit():
-        print("True")
+        cafe = request.form['cafe']
+        location = request.form['location']
+        opening = request.form['opening']
+        closing = request.form['closing']
+        coffee = request.form['coffee']
+        power = request.form['power_rating']
+        wifi = request.form['wifi']
+
+        with open('cafe-data.csv', 'a') as file:
+            file.write(f"\n{cafe},{location},{opening},{closing},{coffee},{power},{wifi}")
+
+        return redirect(url_for('cafes'))
+
     # Exercise:
     # Make the form write a new row into cafe-data.csv
     # with   if form.validate_on_submit()
